@@ -88,7 +88,11 @@ let convertToUSD = money.convert(Currency.USD)
 print("Convert 10 GBP to USD: " + convertToUSD.stringified)
 let convertToCAN = money.convert(Currency.CAN)
 print("Convert 10 GBP to CAN: " + convertToCAN.stringified)
-print("20 USD + 10GBP: " + Money.add(money, convertToUSD).stringified)
+let eurToCAN = Money(amount: 6, currency: Currency.EUR).convert(Currency.CAN)
+print("Convert 6 EUR to CAN: " + eurToCAN.stringified)
+print("10 GBP + 20 USD: " + Money.add(money, convertToUSD).stringified)
+print("20 USD + 20 USD: " + Money.add(convertToUSD, convertToUSD).stringified)
+print("10 GBP + 20 USD + 5 CAN: " + Money.add(money, convertToUSD, eurToCAN).stringified)
 let moneyLeft = Money(amount: 50, currency: Currency.EUR)
 print("50 EUR - 10 GBP: " + Money.subtract(moneyLeft, money).stringified)
 print("50 EUR - 20 EUR: " + Money.subtract(moneyLeft, Money(amount: 20, currency: Currency.EUR)).stringified)
@@ -190,9 +194,13 @@ class Person {
 
 //Test of Person
 print("\nTest of Person")
-print("Generate a testPerson without job and spouse. Age: 16.")
+print("Generate a testPerson without job and spouse.")
 let testPerson = Person(firstName: "Jane", lastName: "Doe", age: 16)
 print("testPerson.toString(): \(testPerson.toString())")
+
+print("Generate a testPerson2 without spouse.")
+let testPerson2 = Person(firstName: "Jenifer", lastName: "Doe", age: 17, job: testJob, spouse: nil)
+print("testPerson2.toString(): \(testPerson2.toString())")
 
 print("Generate tow persons: Lily and Jim and they are spouse")
 let lily = Person(firstName: "Lily", lastName: "Joe", age: 25, job: testJob2, spouse: nil)
