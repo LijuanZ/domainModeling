@@ -12,7 +12,12 @@ enum Currency {
     case USD, GBP, EUR, CAN
 }
 
-struct Money {
+protocol Mathematics {
+    func +(left: Self, right: Self) -> Self
+    func -(left: Self, right: Self) -> Self
+}
+
+struct Money: CustomStringConvertible, Mathematics {
     var amount: Double
     var currency: Currency
     
@@ -33,6 +38,20 @@ struct Money {
             }
             
             return "\(amount) " + cur
+        }
+    }
+    
+    //Implement description property of CustomStringConvertible, similar to stringified property
+    var description: String { get {
+        let cur: String
+        switch currency {
+        case .USD: cur = "USD"
+        case .GBP: cur = "GBP"
+        case .EUR: cur = "EUR"
+        case .CAN: cur = "CAN"
+        }
+        
+        return cur + "\(amount)"
         }
     }
     
@@ -81,6 +100,15 @@ struct Money {
     }
 }
 
+//Since operators are only allowed at global scope, implement here
+func + (left: Money, right: Money) -> Money {
+    return Money.add(left, right)
+}
+
+func -(left: Money, right: Money) -> Money {
+    return Money.subtract(left, right)
+}
+
 //Test of Money
 print("Test of Money")
 let money = Money(amount: 10, currency: Currency.GBP)
@@ -98,11 +126,26 @@ print("50 EUR - 10 GBP: " + Money.subtract(moneyLeft, money).stringified)
 print("50 EUR - 20 EUR: " + Money.subtract(moneyLeft, Money(amount: 20, currency: Currency.EUR)).stringified)
 print("50 EUR - 20 EUR - 20 EUR: " + Money.subtract(moneyLeft, Money(amount: 20, currency: Currency.EUR), Money(amount: 20, currency: Currency.EUR)).stringified)
 
+//Extention of Double
+extension Double {
+    var USD: Money {return Money(amount: self, currency: Currency.USD)}
+    var EUR: Money {return Money(amount: self, currency: Currency.EUR)}
+    var GBP: Money {return Money(amount: self, currency: Currency.GBP)}
+    var CAN: Money {return Money(amount: self, currency: Currency.CAN)}
+}
+
 //Job
-class Job {
+class Job: CustomStringConvertible {
     var title: String
     var salary: Money
     var isSalaryPerHour: Bool
+    
+    //Implement description property of CustomStringConvertible
+    var description: String {
+        get {
+            return "JobTitle: " + title + ", Salary: " + salary.description + (isSalaryPerHour ? " per hour" : " per year")
+        }
+    }
     
     init(title: String, salary: Money, isSalaryPerHour: Bool) {
         self.title = title
@@ -136,12 +179,34 @@ print("testJob.calculateIncome(2080): \(testJob2.calculateIncome(2080).stringifi
 print("Salary of testJob after raise 20%: \(testJob2.raise(20).stringified)")
 
 //Person
-class Person {
+class Person: CustomStringConvertible {
     var firstName: String
     var lastName: String
     var age: Int
     var job: Job?
     var spouse: Person?
+    
+    //Implement description property of CustomStringConvertible, similar to toString()
+    var description: String {
+        get {
+            var selfString = "firstName: " + firstName + ", lastName: " + lastName + ", age: \(age)"
+            if job != nil {
+                selfString = selfString + ", " + job!.description
+            }
+            else {
+                selfString += ", job: nil"
+            }
+            
+            if spouse != nil {
+                selfString += ", spouseFirstName: " + spouse!.firstName + ", spouseLastName: " + spouse!.lastName
+            }
+            else {
+                selfString += ", spouse: nil"
+            }
+            
+            return selfString
+        }
+    }
     
     init(firstName: String, lastName: String, age: Int) {
         self.firstName = firstName
@@ -215,8 +280,19 @@ enum FamilyInitError: ErrorType{
     case IllegalInitilization
 }
 
-class Family {
+class Family: CustomStringConvertible {
     var members: [Person]
+    
+    //Implement description property of CustomStringConvertible
+    var description: String {
+        get {
+            var desc: String = ""
+            for member in members {
+                desc += member.description + "\n"
+            }
+            return desc
+        }
+    }
     
     init(members: [Person]) throws {
         var isLegal: Bool = false
@@ -285,6 +361,12 @@ catch FamilyInitError.IllegalInitilization{
     print("Must have at least one person over age 21 to create a family")
 }
 
-
+//Test for Domain Modeling (Part 2)
+print("\nTest for Domain Modeling (Part 2)")
+//Test of description
+//Test of Implementation of Mathematics protocal in Money
+Money(amount: 10, currency: Currency.EUR) + Money(amount: 10, currency: Currency.CAN)
+print("Money(amount: 10, currency: Currency.EUR) + Money(amount: 10, currency: Currency.CAN)\((Money(amount: 10, currency: Currency.EUR) + Money(amount: 10, currency: Currency.CAN)).description)")
+//Test of extension of Double
 
 
