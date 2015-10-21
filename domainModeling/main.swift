@@ -362,11 +362,35 @@ catch FamilyInitError.IllegalInitilization{
 }
 
 //Test for Domain Modeling (Part 2)
+print("---------------------------------------")
 print("\nTest for Domain Modeling (Part 2)")
 //Test of description
+print("\nTest of description")
+print("Description of 10 CAN: " + Money(amount: 10, currency: Currency.CAN).description)
+print("Description of job: " + testJob.description)
+print("Description of job 2: " + testJob2.description)
+print("Description of person: " + testPerson.description)
+print("Description of person: " + testPerson2.description)
+print("Description of person: " + lily.description)
+
+do {
+    var family = try Family(members: [lily, jim])
+    print("Description of family: " + family.description)
+}
+catch FamilyInitError.IllegalInitilization{
+    print("Must have at least one person over age 21 to create a family")
+}
+
 //Test of Implementation of Mathematics protocal in Money
-Money(amount: 10, currency: Currency.EUR) + Money(amount: 10, currency: Currency.CAN)
-print("Money(amount: 10, currency: Currency.EUR) + Money(amount: 10, currency: Currency.CAN)\((Money(amount: 10, currency: Currency.EUR) + Money(amount: 10, currency: Currency.CAN)).description)")
+print("\nTest of Implementation of Mathematics protocal in Money")
+print("Result of Money(amount: 10, currency: Currency.EUR) + Money(amount: 10, currency: Currency.CAN): " + (Money(amount: 10, currency: Currency.EUR) + Money(amount: 10, currency: Currency.CAN)).description)
+print("Result of Money(amount: 20, currency: Currency.USD) - Money(amount: 10, currency: Currency.GBP): " + (Money(amount: 20, currency: Currency.USD) - Money(amount: 10, currency: Currency.GBP)).description)
+let testMoney = Money(amount: 20, currency: Currency.USD)
+print("Result of 20 USD + 20 USD + 20 USD: " + (testMoney + testMoney + testMoney).description)
+
 //Test of extension of Double
-
-
+print("\nTest of extension of Double")
+print("Result of 20.5.CAN: " + 20.5.CAN.description)
+print("Result of 20.USD: " + 20.USD.description)
+print("Result of 10.GBP: " + 10.GBP.description)
+print("Result of 15.5.EUR: " + 15.5.EUR.description)
